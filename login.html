@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register</title>
+    <link rel="stylesheet" href="style2.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* Ensure home button matches the Sign Up button's styling */
+        .home-btn {
+            margin-top: 40px;
+    margin-bottom: 20px;
+    background: #d4af7a;
+    text-transform: uppercase;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px; /* Space between buttons */
+        }
+
+        .home-btn:hover {
+            background-color: #ebb386; /* Darker shade on hover */
+        }
+
+        /* Other adjustments if necessary */
+        .form .submit {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cont">
+        <!-- Login Form -->
+        <div class="form sign-in">
+            <h2>Welcome</h2>
+            <label>
+                <span>Email</span>
+                <input type="email" id="loginEmail" placeholder="Enter your email" required>
+            </label>
+            <label>
+                <span>Password</span>
+                <input type="password" id="loginPassword" placeholder="Enter your password" required>
+            </label>
+            <p class="forgot-pass">Forgot password?</p>
+            <button type="button" class="submit" onclick="loginUser()">Sign In</button>
+
+            <!-- Home button added here below the Sign In button -->
+            <button class="home-btn" onclick="window.location.href='index.html';">Home</button>
+        </div>
+
+        <div class="sub-cont">
+            <div class="img">
+                <div class="img__text m--up">
+                    <h3>Don't have an account? Please Sign up!</h3>
+                </div>
+                <div class="img__text m--in">
+                    <h3>If you already have an account, just sign in.</h3>
+                </div>
+                <div class="img__btn">
+                    <span class="m--up">Sign Up</span>
+                    <span class="m--in">Sign In</span>
+                </div>
+            </div>
+
+            <!-- Registration Form -->
+            <div class="form sign-up">
+                <h2>Create your Account</h2>
+                <label>
+                    <span>Name</span>
+                    <input type="text" id="regName" placeholder="Enter your name" required>
+                </label>
+                <label>
+                    <span>Email</span>
+                    <input type="email" id="regEmail" placeholder="Enter your email" required>
+                </label>
+                <label>
+                    <span>Password</span>
+                    <input type="password" id="regPassword" placeholder="Enter your password" required>
+                </label>
+                <button type="button" class="submit" onclick="registerUser()">Sign Up</button>
+
+                <!-- Home button added here below the Sign Up button -->
+                <button class="home-btn" onclick="window.location.href='index.html';">
+                    <i class="fas fa-home"></i>
+                </button>
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.img__btn').addEventListener('click', function() {
+            document.querySelector('.cont').classList.toggle('s--signup');
+        });
+
+        async function registerUser() {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            const response = await fetch("http://localhost:5000/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert("✅ Registration successful! Please log in.");
+            } else {
+                alert("❌ " + data.error);
+            }
+        }
+
+        async function loginUser() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const response = await fetch("http://localhost:5000/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert("✅ Login successful!");
+                window.location.href = "dashboard.html";
+            } else {
+                alert("❌ " + data.error);
+            }
+        }
+    </script>
+
+</body>
+</html>
